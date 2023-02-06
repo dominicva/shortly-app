@@ -17,6 +17,7 @@ module.exports = {
         manatee: '#9E9AA8',
         'ghost-white': '#EFF1F7',
         'dark-turqoise': '#2BD0D0',
+        'hover-turqoise': '#9AE3E3',
         error: '#F46363',
       },
       backgroundImage: {

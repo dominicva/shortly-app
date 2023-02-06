@@ -1,27 +1,26 @@
 'use client';
 
-import { getShortenedUrl } from '@/lib/getShortenedUrl';
 import { useState } from 'react';
+import { getShortenedUrl } from '@/lib/getShortenedUrl';
 
 export default function UrlForm() {
+  const [url, setUrl] = useState('');
+  const [shortenedUrl, setShortenedUrl] = useState('');
   const [error, setError] = useState(false);
-  console.log('error', error);
 
   async function handleSubmit(e) {
     e.preventDefault();
-
     const inputVal = e.target.children.url.value;
-
     if (inputVal.length === 0) {
       setError(true);
       return;
     } else {
       setError(false);
     }
-    console.log('here');
+
     try {
       const shortenedUrl = await getShortenedUrl(inputVal);
-      console.log('shortenedUrl', shortenedUrl);
+      setShortenedUrl(shortenedUrl);
     } catch (error) {
       console.error(
         `An error occurred trying to shorten ${inputVal}\n\n\t${error}`
@@ -29,9 +28,18 @@ export default function UrlForm() {
     }
   }
 
+  function handleChange(e) {
+    const curr = e.target.value;
+    if (curr.length > 0) setError(false);
+    setUrl(curr);
+  }
+
   return (
     <div className="mt-20 mb-20">
-      <form className="rounded-lg bg-space-cadet p-6" onSubmit={handleSubmit}>
+      <form
+        className="mb-6 rounded-lg bg-space-cadet p-6"
+        onSubmit={handleSubmit}
+      >
         <label htmlFor="url" className="sr-only">
           Url
         </label>
@@ -39,7 +47,13 @@ export default function UrlForm() {
           type="text"
           id="url"
           placeholder="Shorten a link here..."
-          className="h-12 w-full rounded-md"
+          value={url}
+          onChange={handleChange}
+          className={`h-12 w-full rounded-md ${
+            error
+              ? 'border-4 border-solid border-error placeholder:text-error'
+              : ''
+          }`}
         />
         <div className="h-7">
           <span
@@ -48,10 +62,24 @@ export default function UrlForm() {
             Please add a link
           </span>
         </div>
-        <button className="w-full rounded-md bg-dark-turqoise py-3 text-lg font-bold text-white">
+        <button
+          disabled={error}
+          className={`w-full rounded-md bg-dark-turqoise py-3 text-lg font-bold text-white hover:bg-hover-turqoise disabled:cursor-not-allowed`}
+        >
           Shorten it!
         </button>
       </form>
+      <div className="flex flex-col gap-4">
+        <div className="w-full border-b-2 py-2">
+          <p className="font-medium text-raisin-black">twitter.com</p>
+        </div>
+        <div>
+          <p className="font-medium text-dark-turqoise">dfjdkljf.co</p>
+        </div>
+        <button className="w-full rounded-md bg-dark-turqoise py-2 font-bold text-white">
+          Copy
+        </button>
+      </div>
     </div>
   );
 }
