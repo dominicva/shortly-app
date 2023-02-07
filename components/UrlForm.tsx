@@ -2,15 +2,16 @@
 
 import { useState } from 'react';
 import { getShortenedUrl } from '@/lib/getShortenedUrl';
+import Result from './Result';
 
 export default function UrlForm() {
   const [url, setUrl] = useState('');
   const [shortenedUrl, setShortenedUrl] = useState('');
   const [error, setError] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-
     const inputVal = e.target.children.url.value;
     if (inputVal.length === 0) {
       setError(true);
@@ -23,6 +24,7 @@ export default function UrlForm() {
       const shortenedUrl = await getShortenedUrl(inputVal);
 
       setShortenedUrl(shortenedUrl);
+      setSubmitted(true);
     } catch (error) {
       console.error(
         `An error occurred trying to shorten ${inputVal}\n\n\t${error}`
@@ -50,6 +52,7 @@ export default function UrlForm() {
           id="url"
           placeholder="Shorten a link here..."
           value={url}
+          disabled={submitted}
           onChange={handleChange}
           className={`h-12 w-full rounded-md ${
             error
@@ -65,28 +68,14 @@ export default function UrlForm() {
           </span>
         </div>
         <button
-          disabled={error}
+          disabled={error || submitted}
           className={`w-full rounded-md bg-dark-turqoise py-3 text-lg font-bold text-white hover:bg-hover-turqoise disabled:cursor-not-allowed`}
         >
           Shorten it!
         </button>
       </form>
 
-      <div className="flex flex-col gap-4 rounded-lg bg-white p-6">
-        {shortenedUrl ? (
-          <>
-            <div className="w-full border-b-2 py-2">
-              <p className="font-medium text-raisin-black">{url}</p>
-            </div>
-            <div>
-              <p className="font-medium text-dark-turqoise">{shortenedUrl}</p>
-            </div>
-            <button className="w-full rounded-md bg-dark-turqoise py-2 font-bold text-white">
-              Copy
-            </button>
-          </>
-        ) : null}
-      </div>
+      {shortenedUrl && <Result initialUrl={url} shortenedUrl={shortenedUrl} />}
     </div>
   );
 }
