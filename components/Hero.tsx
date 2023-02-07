@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <>
+    <div className="rounded-md bg-white">
       <section className="mb-16 h-72 w-full bg-hero bg-cover bg-[center_left_1rem] bg-no-repeat" />
       <section>
         <h1 className="mb-4 text-center text-4xl font-bold">
@@ -16,6 +16,6 @@ export default function Hero() {
           </button>
         </div>
       </section>
-    </>
+    </div>
   );
 }

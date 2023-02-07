@@ -4,7 +4,7 @@ import UrlForm from '@/components/UrlForm';
 
 export default function Home() {
   return (
-    <main className="px-6 py-10">
+    <main className="bg-ghost-white px-6 py-10">
       <Header />
       <Hero />
       <UrlForm />
